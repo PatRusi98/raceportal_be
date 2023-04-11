@@ -25,6 +25,30 @@ class CarService
         }
 
         foreach ($data as $entity) {
+            $this->getResponse = ([
+                'id' => $entity->id,
+                'name' => $entity->name,
+                'model' => $entity->model,
+                'simulator' => $entity->simulator,
+            ]);
+        }
+        return $this->getResponse;
+    }
+
+    public function getAll($id = null)
+    {
+        if(!$id) {
+            $data = Car::all();
+        } else {
+            $data = Car::query()->where('id', '=', $id)->get();
+        }
+
+        if($data->isEmpty())
+        {
+            throw new NotFoundHttpException("Car not found");
+        }
+
+        foreach ($data as $entity) {
             $this->getResponse[] = [
                 'id' => $entity->id,
                 'name' => $entity->name,
@@ -36,6 +60,28 @@ class CarService
     }
 
     public function getShort($id = null)
+    {
+        if(!$id) {
+            $data = Car::all();
+        } else {
+            $data = Car::query()->where('id', '=', $id)->get();
+        }
+
+        if($data->isEmpty())
+        {
+            throw new NotFoundHttpException("Car not found");
+        }
+
+        foreach ($data as $entity) {
+            $this->getResponse = ([
+                'id' => $entity->id,
+                'name' => $entity->name
+            ]);
+        }
+        return $this->getResponse;
+    }
+
+    public function getAllShort($id = null)
     {
         if(!$id) {
             $data = Car::all();

@@ -17,4 +17,6 @@ class LoginController extends Controller
     public function refreshToken() { return $this->service->refreshToken(); }
 
     public function signUp(Request $request) { return $this->service->signUp($request); }
+
+    public function logout() { return $this->service->logout(); }
 }

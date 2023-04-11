@@ -12,7 +12,7 @@ class UserController extends Controller
 
     public function __construct(UserService $service){ $this->service = $service; }
 
-    public function getAll() { return $this->service->get(); }
+    public function getAll() { return $this->service->getAll(); }
 
     public function get($id) { return $this->service->get($id); }
 

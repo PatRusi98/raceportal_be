@@ -12,11 +12,11 @@ class SeriesController extends Controller
 
     public function __construct(SeriesService $service){ $this->service = $service; }
 
-    public function getAll() { return $this->service->get(); }
+    public function getAll() { return $this->service->getAll(); }
 
     public function get($id) { return $this->service->get($id); }
 
-    public function getAllActive() { return $this->service->get(-1); }
+    public function getAllActive() { return $this->service->getAll(true); }
 
     public function getAllEvents($id) { return $this->service->getEvents($id); }
 
@@ -28,7 +28,7 @@ class SeriesController extends Controller
 
     public function uploadImage($id) { return $this->service->get($id); }
 
-    public function getAllEntries($id) { return $this->service->getEntry(seriesId: $id); }
+    public function getAllEntries($id) { return $this->service->getAllEntries(seriesId: $id); }
 
     public function getAllEntriesInCsv($id) { return $this->service->get($id); }
 

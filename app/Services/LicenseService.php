@@ -24,6 +24,30 @@ class LicenseService
             throw new NotFoundHttpException("License not found");
         }
 
+        foreach ($data as $entity) {
+            $this->getResponse = ([
+                'id' => $entity->id,
+                'name' => $entity->name,
+                'description' => $entity->description,
+                'color' => $entity->color,
+            ]);
+        }
+        return $this->getResponse;
+    }
+
+    public function getAll($id = null)
+    {
+        if(!$id) {
+            $data = License::all();
+        } else {
+            $data = License::query()->where('id', '=', $id)->get();
+        }
+
+        if($data->isEmpty())
+        {
+            throw new NotFoundHttpException("License not found");
+        }
+
         $this->getResponse = [];
 
         foreach ($data as $entity) {

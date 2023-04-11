@@ -12,7 +12,7 @@ class CarController extends Controller
 
     public function __construct(CarService $carService){ $this->carService = $carService; }
 
-    public function getAll() { return $this->carService->get(); }
+    public function getAll() { return $this->carService->getAll(); }
 
     public function get($id) { return $this->carService->get($id); }
 

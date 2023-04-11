@@ -20,11 +20,6 @@ class CarClassService
             $data = CarClass::query()->where('series_id', '=', $id)->get();
         }
 
-//        if($data->isEmpty())
-//        {
-//            throw new NotFoundHttpException("Class not found");
-//        }
-
         foreach ($data as $entity) {
             $scoringService = new ScoringService();
             $carService = new CarService();
@@ -63,18 +58,31 @@ class CarClassService
             $data = CarClass::query()->where('id', '=', $id)->get();
         }
 
-//        if($data->isEmpty())
-//        {
-//            throw new NotFoundHttpException("Class not found");
-//        }
-
         foreach ($data as $entity) {
 
-            $this->getResponse[] = [
+            $this->getResponse = ([
                 'id' => $entity->id,
                 'name' => $entity->name,
                 'color' => $entity->color
-            ];
+            ]);
+        }
+        return $this->getResponse;
+    }
+
+    public function getAllShort($id = null){
+        if(!$id) {
+            $data = CarClass::all();
+        } else {
+            $data = CarClass::query()->where('id', '=', $id)->get();
+        }
+
+        foreach ($data as $entity) {
+
+            $this->getResponse = ([
+                'id' => $entity->id,
+                'name' => $entity->name,
+                'color' => $entity->color
+            ]);
         }
         return $this->getResponse;
     }

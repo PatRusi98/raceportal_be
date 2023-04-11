@@ -35,6 +35,36 @@ class EventService
         foreach ($data as $entity) {
             $series = new SeriesService();
 
+            $this->getResponse = ([
+                'id' => $entity->id,
+                'name' => $entity->name,
+                'code' => $entity->code,
+                'description' => $entity->description,
+                'briefing' => $entity->briefing,
+                'image' => $entity->image,
+                'raceStart' => $entity->race_start,
+                'qualifyStart' => $entity->qualify_start,
+                'practiceStart' => $entity->practice_start,
+                'seriesId' => $entity->series_id,
+                'state' => $entity->state,
+                'series' => $series->getAllShort($entity->series_id)
+            ]);
+        }
+        return $this->getResponse;
+    }
+
+    public function getAll($id = null)
+    {
+        $data = Event::query()->where('state', '=', 'UPCOMING')->get();
+
+        if($data->isEmpty())
+        {
+            throw new NotFoundHttpException("Event not found");
+        }
+
+        foreach ($data as $entity) {
+            $series = new SeriesService();
+
             $this->getResponse[] = [
                 'id' => $entity->id,
                 'name' => $entity->name,
@@ -47,7 +77,7 @@ class EventService
                 'practiceStart' => $entity->practice_start,
                 'seriesId' => $entity->series_id,
                 'state' => $entity->state,
-                'series' => $series->getShort($entity->series_id)
+                'series' => $series->getAllShort($entity->series_id)
             ];
         }
         return $this->getResponse;

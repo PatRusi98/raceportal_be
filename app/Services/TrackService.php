@@ -24,6 +24,27 @@ class TrackService
         }
 
         foreach ($data as $entity) {
+            $this->getResponse = ([
+                'id' => $entity->id,
+                'name' => $entity->name,
+            ]);
+        }
+        return $this->getResponse;
+    }
+
+    public function getAll($id = null)
+    {
+        if(!$id) {
+            $data = Track::all();
+        } else {
+            $data = Track::query()->where('id', '=', $id)->get();
+            if($data->isEmpty())
+            {
+                throw new NotFoundHttpException("Track not found");
+            }
+        }
+
+        foreach ($data as $entity) {
             $this->getResponse[] = [
                 'id' => $entity->id,
                 'name' => $entity->name,

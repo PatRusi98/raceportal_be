@@ -31,6 +31,51 @@ class UserService
             $licenseService = new LicenseService();
             $license = UserLicenses::query()->where('users_id', '=', $entity->id)->value('licenses_id');
 
+            $this->getResponse = ([
+                'id' => $entity->id,
+                'name' => $entity->name,
+                'username' => $entity->username,
+                'accFirstName' => $entity->acc_first_name,
+                'accLastName' => $entity->acc_last_name,
+                'accShortName' => $entity->acc_short_name,
+                'acShortName' => $entity->ac_short_name,
+                'acFirstName' => $entity->ac_first_name,
+                'acLastName' => $entity->ac_last_name,
+                'rreId' => $entity->rre_id,
+                'steamId' => $entity->steam_id,
+                'iban' => $entity->iban,
+                'phone' => $entity->phone,
+                'address' => $entity->address,
+                'country' => $entity->country,
+                'shirt' => $entity->shirt,
+                'licenseSams' => $entity->licence_sams,
+                'birth' => $entity->birth,
+                'avatar' => $entity->avatar,
+                'licenses' => $licenseService->getAll($license),
+                'role' => $entity->role,
+            ]);
+        }
+        return $this->getResponse;
+    }
+
+    public function getAll($id = null)
+    {
+        if(!$id) {
+            $data = Users::all();
+        }
+        else {
+            $data = Users::query()->where('id', '=', $id)->get();
+        }
+
+        if($data->isEmpty())
+        {
+            throw new NotFoundHttpException("User not found");
+        }
+
+        foreach ($data as $entity) {
+            $licenseService = new LicenseService();
+            $license = UserLicenses::query()->where('users_id', '=', $entity->id)->value('licenses_id');
+
             $this->getResponse[] = [
                 'id' => $entity->id,
                 'name' => $entity->name,
@@ -51,7 +96,7 @@ class UserService
                 'licenseSams' => $entity->licence_sams,
                 'birth' => $entity->birth,
                 'avatar' => $entity->avatar,
-                'licenses' => $licenseService->get($license),
+                'licenses' => $licenseService->getAll($license),
                 'role' => $entity->role,
             ];
         }
@@ -86,6 +131,10 @@ class UserService
         }
         return $this->getResponse;
     }
+
+//    public function login(Request $request) {
+//        return true;
+//    }
 
     public function getDriverByEntry($entryId, $columnId = true) {
         $data = EntryDrivers::query()->where('entry_id', '=', $entryId)->get();

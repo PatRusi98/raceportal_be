@@ -18,16 +18,44 @@ use function Composer\Autoload\includeFile;
 class SeriesService
 {
     private $getResponse;
-    private $response;
 
-    public function get($id = null)
+    public function get($id)
     {
-        if(!$id) {
-            $data = Series::all();
-        } elseif ($id == -1) {
-            $data = Series::query()->where('state', '=', SeriesStateEnum::ACTIVE->value)->get();
+        $data = Series::query()->where('id', '=', $id)->get();
+
+        if($data->isEmpty())
+        {
+            throw new NotFoundHttpException("Series not found");
+        }
+
+        foreach ($data as $entity) {
+            $carClassesService = new CarClassService();
+            $classes = $carClassesService->get($entity['id']);
+
+            $this->getResponse = ([
+                'id' => $entity->id,
+                'name' => $entity->name,
+                'code' => $entity->code,
+                'description' => $entity->description,
+                'rules' => $entity->rules,
+                'color' => $entity->color,
+                'image' => $entity->image,
+                'state' => $entity->state,
+                'simulator' => $entity->simulator,
+                'registrations' => $entity->registrations,
+                'teamsEnable' => $entity->teams_enable,
+                'multiclass' => $entity->multiclass,
+                'classes' => $classes
+            ]);
+        }
+        return $this->getResponse;
+    }
+
+    public function getAll($active = null) {
+        if (!$active) {
+            $data = Series::query()->orderBy('id', 'desc')->get();
         } else {
-            $data = Series::query()->where('id', '=', $id)->get();
+            $data = Series::query()->where('state', '=', 'ACTIVE')->orderBy('id', 'desc')->get();
         }
 
         if($data->isEmpty())
@@ -38,6 +66,9 @@ class SeriesService
         $this->getResponse = [];
 
         foreach ($data as $entity) {
+            $carClassesService = new CarClassService();
+            $classes = $carClassesService->get($entity['id']);
+
             $this->getResponse[] = [
                 'id' => $entity->id,
                 'name' => $entity->name,
@@ -51,35 +82,10 @@ class SeriesService
                 'registrations' => $entity->registrations,
                 'teamsEnable' => $entity->teams_enable,
                 'multiclass' => $entity->multiclass,
+                'classes' => $classes
             ];
         }
-
-        $this->response = [];
-
-        $counter = 0;
-        foreach ($this->getResponse as $entry) {
-            $entryObj = [
-                'id' => $entry['id'],
-                'name' => $entry['name'],
-                'code' => $entry['code'],
-                'description' => $entry['description'],
-                'rules' => $entry['rules'],
-                'color' => $entry['color'],
-                'image' => $entry['image'],
-                'state' => $entry['state'],
-                'simulator' => $entry['simulator'],
-                'registrations' => $entry['registrations'],
-                'teamsEnable' => $entry['teamsEnable'],
-                'multiclass' => $entry['multiclass'],
-            ];
-
-            $carClassesService = new CarClassService();
-
-            $entryObj['classes'] = $carClassesService->get($entry['id']);
-            $this->response[] = $entryObj;
-            $counter++;
-        }
-        return $this->response;
+        return $this->getResponse;
     }
 
     public function getShort($id = null) {
@@ -102,6 +108,30 @@ class SeriesService
                 'color' => $entity->color,
                 'simulator' => $entity->simulator
             ];
+        }
+        return $this->getResponse;
+    }
+
+    public function getAllShort($id = null) {
+        if(!$id) {
+            $data = Series::all();
+        } else {
+            $data = Series::query()->where('id', '=', $id)->get();
+        }
+
+        if($data->isEmpty())
+        {
+            throw new NotFoundHttpException("Series not found");
+        }
+
+        foreach ($data as $entity) {
+            $this->getResponse = ([
+                'id' => $entity->id,
+                'name' => $entity->name,
+                'code' => $entity->code,
+                'color' => $entity->color,
+                'simulator' => $entity->simulator
+            ]);
         }
         return $this->getResponse;
     }
@@ -202,13 +232,53 @@ class SeriesService
             throw new NotFoundHttpException("Entry not found");
         }
 
-        $carClassesService = new CarClassService();
-        $carService = new CarService();
-        $userService = new UserService();
+        foreach ($data as $entity) {
+            $carClassesService = new CarClassService();
+            $carService = new CarService();
+            $userService = new UserService();
 
-        $this->getResponse = [];
+            $carClass = $carClassesService->getShort($entity->car_class_id);
+            $car = $carService->getShort($entity->car_id);
+            $drivers = $userService->getDriverByEntry($entity->id);
+
+            $this->getResponse = ([
+                'id' => $entity->id,
+                'team' => $entity->team,
+                'image' => $entity->image,
+                'number' => $entity->number,
+                'points' => $entity->points,
+                'carClass' => $carClass,
+                'car' => $car,
+                'drivers' => $drivers,
+                'state' => $entity->state
+            ]);
+        }
+
+        return $this->getResponse;
+    }
+
+    public function getAllEntries($seriesId = null, $id = null) {
+        if(!$id && $seriesId) {
+            $data = Entry::query()->where('series_id', '=', $seriesId)->get();
+        } elseif (!$seriesId && $id) {
+            $data = Entry::query()->where('id', '=', $id)->get();
+        } else {
+            $data = Entry::query()->where([['series_id', '=', $seriesId], ['id', '=', $id]])->get();
+        }
+
+        if($data->isEmpty())
+        {
+            throw new NotFoundHttpException("Entry not found");
+        }
 
         foreach ($data as $entity) {
+            $carClassesService = new CarClassService();
+            $carService = new CarService();
+            $userService = new UserService();
+
+            $carClass = $carClassesService->getAllShort($entity->car_class_id);
+            $car = $carService->getShort($entity->car_id);
+            $drivers = $userService->getDriverByEntry($entity->id);
 
             $this->getResponse[] = [
                 'id' => $entity->id,
@@ -216,36 +286,13 @@ class SeriesService
                 'image' => $entity->image,
                 'number' => $entity->number,
                 'points' => $entity->points,
-                'carClass' => $carClassesService->getShort($entity->car_class_id),
-                'car' => $carService->getShort($entity->car_id),
-                'drivers' => $userService->getDriverByEntry($entity->id),
+                'carClass' => $carClass,
+                'car' => $car,
+                'drivers' => $drivers,
                 'state' => $entity->state
             ];
         }
-        $response = [];
-
-        if (count($this->getResponse) == 1) {
-            return $this->getResponse[0];
-        }
-
-        $counter = 0;
-        foreach ($this->getResponse as $entry) {
-            $entryObj = [
-                'id' => $entry['id'],
-                'team' => $entry['team'],
-                'image' => $entry['image'],
-                'number' => $entry['number'],
-                'points' => $entry['points'],
-            ];
-
-            $entryObj['carClass'] = $entry['carClass'][$counter];
-            $entryObj['car'] = $entry['car'][$counter];
-            $entryObj['drivers'] = $entry['drivers'];
-            $entryObj['state'] = $entry['state'];
-            $response[] = $entryObj;
-            $counter++;
-        }
-        return $response;
+        return $this->getResponse;
     }
 
     public function getStandings($id) {

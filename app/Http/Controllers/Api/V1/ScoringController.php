@@ -12,7 +12,7 @@ class ScoringController extends Controller
 
     public function __construct(ScoringService $scoringService) { $this->scoringService = $scoringService; }
 
-    public function getAll() { return $this->scoringService->get(); }
+    public function getAll() { return $this->scoringService->getAll(); }
 
     public function get($id) { return $this->scoringService->get($id); }
 

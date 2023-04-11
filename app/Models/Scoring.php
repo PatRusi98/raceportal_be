@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Scoring extends Model
 {
@@ -18,17 +21,17 @@ class Scoring extends Model
         'fl_scoring_cars',
     ];
 
-    public function raceScoring()
+    public function raceScoring(): HasMany
     {
         return $this->hasMany(ScoringRaceScoring::class);
     }
 
-    public function qualificationScoring()
+    public function qualificationScoring() :HasMany
     {
         return $this->hasMany(ScoringQualificationScoring::class);
     }
 
-    public function flScoring()
+    public function flScoring(): HasMany
     {
         return $this->hasMany(ScoringFlScoring::class);
     }
@@ -45,7 +48,7 @@ class ScoringRaceScoring extends Model
         'race_scoring',
     ];
 
-    public function scoring()
+    public function scoring(): BelongsTo
     {
         return $this->belongsTo(Scoring::class);
     }
@@ -62,7 +65,7 @@ class ScoringQualificationScoring extends Model
         'qualification_scoring',
     ];
 
-    public function scoring()
+    public function scoring(): BelongsTo
     {
         return $this->belongsTo(Scoring::class);
     }
@@ -80,7 +83,7 @@ class ScoringFlScoring extends Model
         'fl_scoring',
     ];
 
-    public function scoring()
+    public function scoring(): BelongsTo
     {
         return $this->belongsTo(Scoring::class);
     }

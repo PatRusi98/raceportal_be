@@ -12,7 +12,7 @@ class LicenseController extends Controller
 
     public function __construct(LicenseService $licenseService){ $this->licenseService = $licenseService; }
 
-    public function getAll() { return $this->licenseService->get(); }
+    public function getAll() { return $this->licenseService->getAll(); }
 
     public function get($id) { return $this->licenseService->get($id); }
 

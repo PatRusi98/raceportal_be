@@ -20,7 +20,7 @@ class EventController extends Controller
 
     public function delete($id) { return $this->service->delete($id); }
 
-    public function getUpcoming() { return $this->service->get(); }
+    public function getUpcoming() { return $this->service->getAll(-1); }
 
     public function uploadImage($id) { return $this->service->get($id); }
 
