@@ -98,7 +98,7 @@ class CarClassService
         }
 
         $rules = $this->rules();
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->input('classes'), $rules);
 
         if ($validator->fails()) {
             return response()->json([
@@ -107,6 +107,14 @@ class CarClassService
         }
 
         $entity->name = $request->input('name');
+        $entity->color = $request->input('color');
+        $entity->max_entries = $request->input('maxEntries');
+        $entity->acc_category_id = $request->input('accCategoryId');
+        $entity->drivers_per_entry = $request->input('driversPerEntry');
+        $entity->need_sams_license = $request->input('needSamsLicense');
+        $entity->scoring_id = $request->input('scoringId');
+        $entity->series_id = $request->input('seriesId');
+
         $entity->save();
 
         return response()->json(["class"=>$entity,

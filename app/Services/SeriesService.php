@@ -12,6 +12,7 @@ use App\Models\Event;
 use App\Models\Series;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use phpDocumentor\Reflection\Types\ClassString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use function Composer\Autoload\includeFile;
 
@@ -161,12 +162,12 @@ class SeriesService
         $entity->color = "";
         $entity->description = "";
         $entity->image = "";
-        $entity->multiclass = 0;
+        $entity->multiclass = false;
         $entity->name = "";
-        $entity->registrations = 0;
+        $entity->registrations = false;
         $entity->rules = "";
         $entity->state = SeriesStateEnum::PREPARING->value;
-        $entity->teams_enable = 0;
+        $entity->teams_enable = false;
 
 
         $entity->save();
@@ -196,9 +197,25 @@ class SeriesService
         $entity->image = $request->input('image');
         $entity->state = $request->input('state');
         $entity->simulator = $request->input('simulator');
-        $entity->registrations = $request->input('registrations');
-        $entity->teams_enable = $request->input('teamsEnable');
-        $entity->multiclass = $request->input('multiclass');
+
+        if ($request->input('registrations') == "true") {
+            $entity->registrations = true;
+        } else {
+            $entity->registrations = false;
+        }
+
+        if ($request->input('teamsEnable') == "true") {
+            $entity->teams_enable = true;
+        } else {
+            $entity->teams_enable = false;
+        }
+
+
+        if ($request->input('multiclass') == "true") {
+            $entity->multiclass = true;
+        } else {
+            $entity->multiclass = false;
+        }
         $entity->save();
 
         return response()->json([$entity,
