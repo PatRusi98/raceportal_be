@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Services\SeriesService;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
 
 class SeriesController extends Controller
@@ -26,7 +27,7 @@ class SeriesController extends Controller
 
     public function delete($id) { return $this->service->delete($id); }
 
-    public function uploadImage($id) { return $this->service->get($id); }
+    public function uploadImage(Request $request, $id) { return $this->service->uploadImage($request ,$id); }
 
     public function getAllEntries($id) { return $this->service->getAllEntries(seriesId: $id); }
 
@@ -42,7 +43,7 @@ class SeriesController extends Controller
 
     public function approveEntry($seriesId, $id) { return $this->service->approveEntry($seriesId, $id); }
 
-    public function uploadImageForEntry($seriesId, $id) { return $this->service->get($id); }
+    public function uploadImageForEntry(Request $request, $id) { return $this->service->uploadEntryImage($request ,$id); }
 
     public function getStandings($id) { return $this->service->getStandings($id); }
 }

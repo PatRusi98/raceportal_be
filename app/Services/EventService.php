@@ -294,6 +294,25 @@ class EventService
         return $participant;
     }
 
+    public function uploadImage(Request $request, $id) {
+        try {
+            $file = $request->file('file');
+            $time = new \DateTime();
+            $timestamp = $time->format('YmdHis');
+            $filename = "event_".$id."_".$timestamp.".jpg"; //$file->getExtension()
+            $file->move(public_path('public/images'), $filename);
+
+            $entity = Event::findOrFail($id);
+            $entity->image = $filename;
+            $entity->save();
+
+        } catch (\Exception $e) {
+            error_log($e);
+        }
+
+        return response()->json("image uploaded successfully");
+    }
+
     public function getPenalty($id) {
         $data = Penalty::query()->where('result_id', '=', $id)->get();
 

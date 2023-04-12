@@ -188,6 +188,25 @@ class UserService
         return response()->json($entity, 200);
     }
 
+    public function uploadImage(Request $request, $id) {
+        try {
+            $file = $request->file('file');
+            $time = new \DateTime();
+            $timestamp = $time->format('YmdHis');
+            $filename = "avatar_".$id."_".$timestamp.".jpg"; //$file->getExtension()
+            $file->move(public_path('public/images'), $filename);
+
+            $entity = Users::findOrFail($id);
+            $entity->avatar = $filename;
+            $entity->save();
+
+        } catch (\Exception $e) {
+            error_log($e);
+        }
+
+        return response()->json("image uploaded successfully");
+    }
+
     public function delete($id)
     {
         $find = Users::query()->where('id', '=', $id)->get();
@@ -209,7 +228,7 @@ class UserService
             $userLicense->licenses_id = $licenseId;
             $userLicense->save();
         }
-        $this->get($id);
+        return $this->get($id);
     }
 
     public function rules(){

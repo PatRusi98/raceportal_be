@@ -22,7 +22,7 @@ class EventController extends Controller
 
     public function getUpcoming() { return $this->service->getAll(-1); }
 
-    public function uploadImage($id) { return $this->service->get($id); }
+    public function uploadImage(Request $request, $id) { return $this->service->uploadImage($request, $id); }
 
     public function uploadResult($id) { return $this->service->get($id); }
 

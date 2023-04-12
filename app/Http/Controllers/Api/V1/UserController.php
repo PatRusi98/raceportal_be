@@ -22,5 +22,5 @@ class UserController extends Controller
 
     public function removeLicense($id, $licenseId) { return $this->service->addLicense($id); }
 
-    public function uploadAvatar(Request $request, $id) { return $this->service->store($request, $id); }
+    public function uploadAvatar(Request $request, $id) { return $this->service->uploadImage($request, $id); }
 }

@@ -10,7 +10,9 @@ use App\Models\CarClass;
 use App\Models\Entry;
 use App\Models\Event;
 use App\Models\Series;
+use http\Env;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Validator;
 use phpDocumentor\Reflection\Types\ClassString;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -434,6 +436,44 @@ class SeriesService
         $entry->save();
 
         return response()->json($entry, 200);
+    }
+
+    public function uploadImage(Request $request, $id) {
+        try {
+            $file = $request->file('file');
+            $time = new \DateTime();
+            $timestamp = $time->format('YmdHis');
+            $filename = "series_".$id."_".$timestamp.".jpg"; //$file->getExtension()
+            $file->move(public_path('public/images'), $filename);
+
+            $entity = Series::findOrFail($id);
+            $entity->image = $filename;
+            $entity->save();
+
+        } catch (\Exception $e) {
+            error_log($e);
+        }
+
+        return response()->json("image uploaded successfully");
+    }
+
+    public function uploadEntryImage(Request $request, $id) {
+        try {
+            $file = $request->file('file');
+            $time = new \DateTime();
+            $timestamp = $time->format('YmdHis');
+            $filename = "entry_".$id."_".$timestamp.".jpg"; //$file->getExtension()
+            $file->move(public_path('public/images'), $filename);
+
+            $entity = Entry::findOrFail($id);
+            $entity->image = $filename;
+            $entity->save();
+
+        } catch (\Exception $e) {
+            error_log($e);
+        }
+
+        return response()->json("image uploaded successfully");
     }
 
     public function updateEntry(Request $request, $seriesId, $id) {
