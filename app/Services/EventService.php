@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\EventStateEnum;
 use App\Enums\PenaltyTypeEnum;
 use App\Enums\SessionTypeEnum;
 use App\Models\Event;
@@ -126,7 +127,40 @@ class EventService
         }
 
         $entity->name = $request->input('name');
+        $entity->description = $request->input('description');
+        $entity->race_start = $request->input('raceStart');
+        $entity->qualify_start = $request->input('qualifyStart');
+        $entity->practice_start = $request->input('practiceStart');
+        $entity->series_id = $request->input('seriesId');
+        $entity->state = EventStateEnum::UPCOMING;
+        $entity->save();
+
+        return response()->json(["track"=>$entity,
+            "message"=>$message], 200);
+    }
+
+    public function update(Request $request, $id = null)
+    {
+        if ($id) {
+            $entity = Event::findOrFail($id);
+            $message = "Event has been successfully updated";
+        } else {
+            $entity = new Event();
+            $message = "Event has been successfully created";
+        }
+
+        $rules = $this->rules();
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $entity->name = $request->input('name');
         $entity->code = $request->input('code');
+        $entity->image = $request->input('image');
         $entity->description = $request->input('description');
         $entity->briefing = $request->input('briefing');
         $entity->race_start = $request->input('raceStart');

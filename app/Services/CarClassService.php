@@ -33,7 +33,7 @@ class CarClassService
 
             $toResponse = [];
             foreach ($availableCars as $carDetail) {
-                $toResponse += $carService->get($carDetail);
+                $toResponse += $carService->getAll($carDetail);
             }
 
             $this->getResponse[] = [
@@ -97,14 +97,14 @@ class CarClassService
             $message = "Class has been successfully created";
         }
 
-        $rules = $this->rules();
-        $validator = Validator::make($request->input('classes'), $rules);
+//        $rules = $this->rules();
+//        $validator = Validator::make($request->input('classes'), $rules);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors(),
-            ], 422);
-        }
+//        if ($validator->fails()) {
+//            return response()->json([
+//                'errors' => $validator->errors(),
+//            ], 422);
+//        }
 
         $entity->name = $request->input('name');
         $entity->color = $request->input('color');
@@ -114,11 +114,22 @@ class CarClassService
         $entity->need_sams_license = $request->input('needSamsLicense');
         $entity->scoring_id = $request->input('scoringId');
         $entity->series_id = $request->input('seriesId');
-
         $entity->save();
+        $this->carsToClass($request->input('availableCars'), $entity->id);
 
         return response()->json(["class"=>$entity,
             "message"=>$message], 200);
+    }
+
+    public function carsToClass($cars, $classId) {
+        CarClassAvailableCars::query()->where('car_class_id', '=', $classId)->delete();
+
+        foreach ($cars as $item) {
+            $table = new CarClassAvailableCars();
+            $table->car_class_id = $classId;
+            $table->available_cars_id = $item;
+            $table->save();
+        }
     }
 
     public function delete($id)

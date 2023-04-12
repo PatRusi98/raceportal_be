@@ -132,10 +132,6 @@ class UserService
         return $this->getResponse;
     }
 
-//    public function login(Request $request) {
-//        return true;
-//    }
-
     public function getDriverByEntry($entryId, $columnId = true) {
         $data = EntryDrivers::query()->where('entry_id', '=', $entryId)->get();
 
@@ -156,10 +152,8 @@ class UserService
     {
         if ($id) {
             $entity = Users::findOrFail($id);
-            $message = "Event has been successfully updated";
         } else {
             $entity = new Users();
-            $message = "Event has been successfully created";
         }
 
         $rules = $this->rules();
@@ -172,18 +166,26 @@ class UserService
         }
 
         $entity->name = $request->input('name');
-        $entity->code = $request->input('code');
-        $entity->description = $request->input('description');
-        $entity->briefing = $request->input('briefing');
-        $entity->race_start = $request->input('raceStart');
-        $entity->qualify_start = $request->input('qualifyStart');
-        $entity->practice_start = $request->input('practiceStart');
-        $entity->series_id = $request->input('seriesId');
-        $entity->state = $request->input('state');
+        $entity->acc_first_name = $request->input('accFirstName');
+        $entity->acc_last_name = $request->input('accLastName');
+        $entity->acc_short_name = $request->input('accShortName');
+        $entity->ac_first_name = $request->input('acFirstName');
+        $entity->ac_last_name = $request->input('acLastName');
+        $entity->ac_short_name = $request->input('acShortName');
+        $entity->address = $request->input('address');
+        $entity->avatar = $request->input('avatar');
+        $entity->birth = $request->input('birth');
+        $entity->country = $request->input('country');
+        $entity->iban = $request->input('iban');
+        $entity->license_sams = $request->input('licenseSams');
+        $entity->phone = $request->input('phone');
+        $entity->rre_id = $request->input('rreId');
+        $entity->shirt = $request->input('shirt');
+        $entity->steam_id = $request->input('steam_id');
+        $entity->steam_id = $request->input('steamId');
         $entity->save();
 
-        return response()->json(["track"=>$entity,
-            "message"=>$message], 200);
+        return response()->json($entity, 200);
     }
 
     public function delete($id)
@@ -199,15 +201,26 @@ class UserService
         return response()->json(["message"=>"Event was successfully deleted"], 200);
     }
 
+    public function addLicense($id, $licenseId = null) {
+        UserLicenses::query()->where('users_id', '=', $id)->delete();
+        if ($licenseId) {
+            $userLicense = new UserLicenses();
+            $userLicense->users_id = $id;
+            $userLicense->licenses_id = $licenseId;
+            $userLicense->save();
+        }
+        $this->get($id);
+    }
+
     public function rules(){
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'text',
-            'image' => 'string',
-            'state' => 'string',
-            'series_id' => 'integer',
-            'code' => 'string',
-            'briefing' => 'text',
+//            'name' => 'required|string|max:255',
+//            'description' => 'text',
+//            'image' => 'string',
+//            'state' => 'string',
+//            'series_id' => 'integer',
+//            'code' => 'string',
+//            'briefing' => 'text',
         ];
     }
 }

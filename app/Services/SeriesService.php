@@ -419,13 +419,25 @@ class SeriesService
             "message"=>"Entry has been approved"], 200);
     }
 
+    public function registerEntry(Request $request, $seriesId) {
+        $entry = new Entry();
+
+        $entry->car_class_id = $request->input('carClass');
+        $entry->car_id = $request->input('car');
+        $entry->team = $request->input('team');
+        $entry->number = $request->input('number');
+        $entry->image = "obrazok";
+        $entry->state = EntryStateEnum::WAITING;
+        $entry->points = 0;
+        $entry->series_id = $seriesId;
+        //drivers nieco
+        $entry->save();
+
+        return response()->json($entry, 200);
+    }
+
     public function updateEntry(Request $request, $seriesId, $id) {
         $data = Entry::findOrFail($id);
-
-        if($data->isEmpty())
-        {
-            throw new NotFoundHttpException("Entry not found");
-        }
 
         $rules = $this->rules();
         $validator = Validator::make($request->all(), $rules);
@@ -440,11 +452,17 @@ class SeriesService
         $data->car_id = $request->input('car');
         $data->team = $request->input('team');
         $data->number = $request->input('number');
-        $data->state = $request->input('state');
+        if ($request->input('state')) {
+            $data->state = $request->input('state');
+        }
+        if ($request->input('image')) {
+            $data->state = $request->input('image');
+        }
+        $data->series_id = $seriesId;
+        $data->save();
         //drivers nieco
 
-        return response()->json(["scoring"=>$request,
-            "message"=>"Entry has been successfully updated"], 200);
+        return response()->json($data, 200);
     }
 
     public function rules(){

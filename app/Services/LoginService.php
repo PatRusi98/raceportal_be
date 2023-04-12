@@ -31,12 +31,15 @@ class LoginService
             $refreshExpiresIn = config('sanctum.refresh_expiration');
             $refreshExpiryDate = Carbon::now()->addSeconds($refreshExpiresIn);
 
+            $actualUser = Users::query()->where('username', '=', $request->input('username'))->get();
+
             $response = [
                 'token' => "Bearer $token",
                 'expiration' => $expiryDate,
                 'refreshToken' => "Refresh $refreshToken",
                 'expirationRefresh' => $refreshExpiryDate,
                 'user' => $user
+                //'user' => $actualUser
             ];
 
             return response()->json($response, 200);

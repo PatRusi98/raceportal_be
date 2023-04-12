@@ -29,19 +29,19 @@ Route::group(['prefix' => 'v1'], function () {
 
     //region Series
     Route::group(['prefix' => 'v1'], function () {
-        Route::get('series', 'App\Http\Controllers\Api\V1\SeriesController@getAll'); //DONE when there is class allocated
+        Route::get('series', 'App\Http\Controllers\Api\V1\SeriesController@getAll');
     });
 
     Route::group(['prefix' => 'v1'], function () {
-        Route::get('series/active', 'App\Http\Controllers\Api\V1\SeriesController@getAllActive'); //DONE
+        Route::get('series/active', 'App\Http\Controllers\Api\V1\SeriesController@getAllActive');
     });
 
     Route::group(['prefix' => 'v1'], function () {
-        Route::get('series/{id}/events', 'App\Http\Controllers\Api\V1\SeriesController@getAllEvents'); //DONE
+        Route::get('series/{id}/events', 'App\Http\Controllers\Api\V1\SeriesController@getAllEvents');
     });
 
     Route::group(['prefix' => 'v1'], function () {
-        Route::get('series/{id}', 'App\Http\Controllers\Api\V1\SeriesController@get'); //DONE
+        Route::get('series/{id}', 'App\Http\Controllers\Api\V1\SeriesController@get');
     });
 
     Route::group(['prefix' => 'v1'], function () {
@@ -61,7 +61,7 @@ Route::group(['prefix' => 'v1'], function () {
     });
 
     Route::group(['prefix' => 'v1'], function () {
-        Route::get('series/{id}/entry', 'App\Http\Controllers\Api\V1\SeriesController@getAllEntries'); //DONE
+        Route::get('series/{id}/entry', 'App\Http\Controllers\Api\V1\SeriesController@getAllEntries');
     });
 
     Route::group(['prefix' => 'v1'], function () {
@@ -73,11 +73,11 @@ Route::group(['prefix' => 'v1'], function () {
     });
 
     Route::group(['prefix' => 'v1'], function () {
-        Route::get('series/{seriesId}/entry/{id}', 'App\Http\Controllers\Api\V1\SeriesController@getEntry'); //DONE
+        Route::get('series/{seriesId}/entry/{id}', 'App\Http\Controllers\Api\V1\SeriesController@getEntry');
     });
 
     Route::group(['prefix' => 'v1'], function () {
-        Route::post('series/{seriesId}/entry', 'App\Http\Controllers\Api\V1\SeriesController@registerEntry');
+        Route::post('series/{seriesId}/entry', 'App\Http\Controllers\Api\V1\SeriesController@registerEntry'); //
     });
 
     Route::group(['prefix' => 'v1'], function () {
@@ -185,7 +185,7 @@ Route::group(['prefix' => 'v1'], function () {
     });
     //endregion
 
-    //region Car-Class
+    //region Car-Class FINISHED
     Route::group(['prefix' => 'v1'], function () {
         Route::delete('car-class/{id}', 'App\Http\Controllers\Api\V1\CarClassController@delete'); //DONE
     });
@@ -199,7 +199,7 @@ Route::group(['prefix' => 'v1'], function () {
     });
     //endregion
 
-    //region Users TODO
+    //region Users FINISHED, no Image
     Route::group(['prefix' => 'v1'], function () {
         Route::get('users', 'App\Http\Controllers\Api\V1\UserController@getAll');
     });

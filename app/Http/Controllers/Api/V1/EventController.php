@@ -16,7 +16,7 @@ class EventController extends Controller
 
     public function create(Request $request) { return $this->service->store($request); }
 
-    public function update(Request $request, $id) { return $this->service->store($request, $id); }
+    public function update(Request $request, $id) { return $this->service->update($request, $id); }
 
     public function delete($id) { return $this->service->delete($id); }
 

@@ -36,7 +36,7 @@ class SeriesController extends Controller
 
     public function getEntry($seriesId, $id) { return $this->service->getEntry(seriesId: $seriesId, id: $id); }
 
-    public function registerEntry($seriesId, $id) { return $this->service->get($id); }
+    public function registerEntry(Request $request ,$seriesId) { return $this->service->registerEntry($request, $seriesId); }
 
     public function editEntry(Request $request, $seriesId, $id) { return $this->service->updateEntry($request, $seriesId, $id); }
 
