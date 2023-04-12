@@ -143,10 +143,8 @@ class EventService
     {
         if ($id) {
             $entity = Event::findOrFail($id);
-            $message = "Event has been successfully updated";
         } else {
             $entity = new Event();
-            $message = "Event has been successfully created";
         }
 
         $rules = $this->rules();
@@ -170,8 +168,7 @@ class EventService
         $entity->state = $request->input('state');
         $entity->save();
 
-        return response()->json(["track"=>$entity,
-            "message"=>$message], 200);
+        return response()->json($entity, 200);
     }
 
     public function getResult($id){
@@ -318,15 +315,16 @@ class EventService
 
     public function delete($id)
     {
-        $find = Event::query()->where('id', '=', $id)->get();
-        if ($find->isEmpty())
-        {
-            throw new NotFoundHttpException("Event not found");
-        }
-
         $entity = Event::findOrFail($id);
         $entity->delete();
         return response()->json(["message"=>"Event was successfully deleted"], 200);
+    }
+
+    public function deleteSession($id)
+    {
+        $entity = Session::findOrFail($id);
+        $entity->delete();
+        return response()->json(["message"=>"Session was successfully deleted"], 200);
     }
 
     public function rules(){

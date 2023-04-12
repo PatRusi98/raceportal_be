@@ -27,7 +27,7 @@ Route::group(['prefix' => 'v1'], function () {
     });
     //endregion
 
-    //region Series
+    //region Series FINISHED (repair CarClass once needs array and later object, implement images)
     Route::group(['prefix' => 'v1'], function () {
         Route::get('series', 'App\Http\Controllers\Api\V1\SeriesController@getAll');
     });
@@ -199,7 +199,7 @@ Route::group(['prefix' => 'v1'], function () {
     });
     //endregion
 
-    //region Users FINISHED, no Image
+    //region Users FINISHED (implement images)
     Route::group(['prefix' => 'v1'], function () {
         Route::get('users', 'App\Http\Controllers\Api\V1\UserController@getAll');
     });
@@ -231,7 +231,7 @@ Route::group(['prefix' => 'v1'], function () {
     });
     //endregion
 
-    //region Events
+    //region Events (implement parsers, images, add-penalties, points from events into array)
     Route::group(['prefix' => 'v1'], function () {
         Route::get('events/upcoming', 'App\Http\Controllers\Api\V1\EventController@getUpcoming');
     });

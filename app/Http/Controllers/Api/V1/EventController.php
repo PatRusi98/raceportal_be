@@ -28,7 +28,7 @@ class EventController extends Controller
 
     public function getResult($id) { return $this->service->getResult($id); }
 
-    public function deleteSession($id, $idSession) { return $this->service->get($id); }
+    public function deleteSession($id, $idSession) { return $this->service->deleteSession($idSession); }
 
     public function addPenalty($id, $idSession, $resultId) { return $this->service->get($id); }
 }
