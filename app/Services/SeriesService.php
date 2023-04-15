@@ -8,6 +8,7 @@ use App\Enums\SeriesStateEnum;
 use App\Models\Car;
 use App\Models\CarClass;
 use App\Models\Entry;
+use App\Models\EntryDrivers;
 use App\Models\Event;
 use App\Models\Series;
 use http\Env;
@@ -428,12 +429,19 @@ class SeriesService
         $entry->car_id = $request->input('car');
         $entry->team = $request->input('team');
         $entry->number = $request->input('number');
-        $entry->image = "obrazok";
         $entry->state = EntryStateEnum::WAITING;
         $entry->points = 0;
         $entry->series_id = $seriesId;
+        $entry->image = "image";
         //drivers nieco
         $entry->save();
+
+        $drivers = new EntryDrivers();
+        $drivers->entry_id = $entry->id;
+        $drivers->drivers_id = $request->input('drivers');
+        $drivers->save();
+
+        $this->uploadEntryImage($request, $entry->id);
 
         return response()->json($entry, 200);
     }
@@ -459,7 +467,7 @@ class SeriesService
 
     public function uploadEntryImage(Request $request, $id) {
         try {
-            $file = $request->file('file');
+            $file = $request->file('livery');
             $time = new \DateTime();
             $timestamp = $time->format('YmdHis');
             $filename = "entry_".$id."_".$timestamp.".jpg"; //$file->getExtension()

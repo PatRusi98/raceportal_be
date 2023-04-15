@@ -132,10 +132,14 @@ class EventService
         $entity->qualify_start = $request->input('qualifyStart');
         $entity->practice_start = $request->input('practiceStart');
         $entity->series_id = $request->input('seriesId');
-        $entity->state = EventStateEnum::UPCOMING;
+        if ($request->input('state')) {
+            $entity->state = $request->input('state');
+        } else {
+            $entity->state = EventStateEnum::UPCOMING;
+        }
         $entity->save();
 
-        return response()->json(["track"=>$entity,
+        return response()->json(["event"=>$entity,
             "message"=>$message], 200);
     }
 

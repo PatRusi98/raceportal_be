@@ -27,3 +27,4 @@ class Session extends Model
         return $this->hasMany(Result::class);
     }
 }
+
