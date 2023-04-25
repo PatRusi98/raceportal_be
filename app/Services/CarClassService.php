@@ -78,11 +78,11 @@ class CarClassService
 
         foreach ($data as $entity) {
 
-            $this->getResponse = ([
+            $this->getResponse = [
                 'id' => $entity->id,
                 'name' => $entity->name,
                 'color' => $entity->color
-            ]);
+            ];
         }
         return $this->getResponse;
     }
@@ -111,7 +111,12 @@ class CarClassService
         $entity->max_entries = $request->input('maxEntries');
         $entity->acc_category_id = $request->input('accCategoryId');
         $entity->drivers_per_entry = $request->input('driversPerEntry');
-        $entity->need_sams_license = $request->input('needSamsLicense');
+        if ($request->input('needSamsLicense') == "true") {
+            $entity->need_sams_license = true;
+        } else {
+            $entity->need_sams_license = false;
+        }
+        //$entity->need_sams_license = $request->input('needSamsLicense');
         $entity->scoring_id = $request->input('scoringId');
         $entity->series_id = $request->input('seriesId');
         $entity->save();

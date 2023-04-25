@@ -296,7 +296,7 @@ class SeriesService
             $carService = new CarService();
             $userService = new UserService();
 
-            $carClass = $carClassesService->getAllShort($entity->car_class_id);
+            $carClass = $carClassesService->getShort($entity->car_class_id);
             $car = $carService->getShort($entity->car_id);
             $drivers = $userService->getDriverByEntry($entity->id);
 
@@ -345,9 +345,9 @@ class SeriesService
             $data = Entry::query()->where([['series_id', '=', $seriesId], ['car_class_id', '=', $classId]])->orderBy('points', 'desc')->get();
         }
 
-        if ($data->isEmpty()) {
-            throw new NotFoundHttpException("Entry not found");
-        }
+        //if ($data->isEmpty()) {
+        //    throw new NotFoundHttpException("Entry not found");
+        //}
 
         foreach ($data as $entity) {
             $carClassesService = new CarClassService();
@@ -468,6 +468,9 @@ class SeriesService
     public function uploadEntryImage(Request $request, $id) {
         try {
             $file = $request->file('livery');
+            if (!$file) {
+                $file = $request->file('file');
+            }
             $time = new \DateTime();
             $timestamp = $time->format('YmdHis');
             $filename = "entry_".$id."_".$timestamp.".jpg"; //$file->getExtension()
@@ -477,11 +480,13 @@ class SeriesService
             $entity->image = $filename;
             $entity->save();
 
+            return response()->json("image uploaded successfully");
+
         } catch (\Exception $e) {
             error_log($e);
         }
 
-        return response()->json("image uploaded successfully");
+        //return response()->json("image uploaded successfully");
     }
 
     public function updateEntry(Request $request, $seriesId, $id) {
@@ -502,9 +507,6 @@ class SeriesService
         $data->number = $request->input('number');
         if ($request->input('state')) {
             $data->state = $request->input('state');
-        }
-        if ($request->input('image')) {
-            $data->state = $request->input('image');
         }
         $data->series_id = $seriesId;
         $data->save();

@@ -24,7 +24,7 @@ class EventController extends Controller
 
     public function uploadImage(Request $request, $id) { return $this->service->uploadImage($request, $id); }
 
-    public function uploadResult($id) { return $this->service->get($id); }
+    public function uploadResult(Request $request, $id) { return $this->service->uploadResult($request, $id); }
 
     public function getResult($id) { return $this->service->getResult($id); }
 

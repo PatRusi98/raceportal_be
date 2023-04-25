@@ -75,6 +75,11 @@ class UserService
         foreach ($data as $entity) {
             $licenseService = new LicenseService();
             $license = UserLicenses::query()->where('users_id', '=', $entity->id)->value('licenses_id');
+            if ($license) {
+                $licenseArr = $licenseService->getAll($license);
+            } else {
+                $licenseArr = [];
+            }
 
             $this->getResponse[] = [
                 'id' => $entity->id,
@@ -96,7 +101,7 @@ class UserService
                 'licenseSams' => $entity->licence_sams,
                 'birth' => $entity->birth,
                 'avatar' => $entity->avatar,
-                'licenses' => $licenseService->getAll($license),
+                'licenses' => $licenseArr,
                 'role' => $entity->role,
             ];
         }

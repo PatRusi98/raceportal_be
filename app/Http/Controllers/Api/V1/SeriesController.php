@@ -43,7 +43,7 @@ class SeriesController extends Controller
 
     public function approveEntry($seriesId, $id) { return $this->service->approveEntry($seriesId, $id); }
 
-    public function uploadImageForEntry(Request $request, $id) { return $this->service->uploadEntryImage($request ,$id); }
+    public function uploadImageForEntry(Request $request, $seriesId, $id) { return $this->service->uploadEntryImage($request ,$id); }
 
     public function getStandings($id) { return $this->service->getStandings($id); }
 }

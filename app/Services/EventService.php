@@ -9,10 +9,14 @@ use App\Models\Event;
 use App\Models\Participant;
 use App\Models\Penalty;
 use App\Models\Result;
+use App\Models\Series;
 use App\Models\Session;
 use App\Models\Warning;
+use App\Parsers\Sim\rFactor2;
+use App\Parsers\Sim\rre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Nette\NotImplementedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class EventService
@@ -348,6 +352,58 @@ class EventService
         $entity = Session::findOrFail($id);
         $entity->delete();
         return response()->json(["message"=>"Session was successfully deleted"], 200);
+    }
+
+    public function uploadResult(Request $request, $id){
+        $event = Event::findById($id);
+        $series = Series::findById($event->series_id);
+
+        switch ($series->simulator) {
+            case "rF2":
+                $parser = new rFactor2();
+                try {
+                    $file = $request->file('file');
+                    $filename = "rF2example.xml";
+                    $file->move(public_path('public/logs'), $filename);
+                    return $parser->parse($filename, $id);
+                } catch (\Exception $e) {
+                    error_log($e);
+                }
+            case "ACC":
+                $parser = new acc();
+                try {
+                    $file = $request->file('file');
+                    $filename = "ACCexample.json";
+                    $file->move(public_path('public/logs'), $filename);
+                    return $parser->parse($filename, $id);
+                } catch (\Exception $e) {
+                    error_log($e);
+                }
+            case "AC":
+                $parser = new ac();
+                try {
+                    $file = $request->file('file');
+                    $filename = "ACexample.json";
+                    $file->move(public_path('public/logs'), $filename);
+                    return $parser->parse($filename, $id);
+                } catch (\Exception $e) {
+                    error_log($e);
+                }
+            case "RRE":
+                $parser = new rre();
+                try {
+                    $file = $request->file('file');
+                    $filename = "RREexample.json";
+                    $file->move(public_path('public/logs'), $filename);
+                    return $parser->parse($filename, $id);
+                } catch (\Exception $e) {
+                    error_log($e);
+                }
+            case "iRACING":
+                return response("Not implemented yet!", 400);
+            default:
+                return response("Something went wrong", 400);
+        }
     }
 
     public function rules(){
